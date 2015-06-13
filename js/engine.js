@@ -26,8 +26,11 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 505;
-    canvas.height = 606;
+    canvas.height = 706;
     doc.body.appendChild(canvas);
+
+    ctx.font = "35px verdana"
+    ctx.fillStyle = "Black"
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -105,6 +108,8 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+        ctx.clearRect(0, 0, canvas.width, 80);
+        ctx.clearRect(0, 200, canvas.width, 500);
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -139,6 +144,7 @@ var Engine = (function(global) {
 
 
         renderEntities();
+        drawText();
     }
 
     /* This function is called by the render function and is called on each game
@@ -153,6 +159,7 @@ var Engine = (function(global) {
             enemy.render();
         });
         gem.render();
+        lives.render();
         player.render();
     }
 
@@ -176,7 +183,8 @@ var Engine = (function(global) {
         'images/char-boy.png',
         'images/gem-orange.png',
         'images/gem-blue.png',
-        'images/gem-green.png'
+        'images/gem-green.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 

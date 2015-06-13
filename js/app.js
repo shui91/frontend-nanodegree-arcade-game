@@ -2,9 +2,7 @@
 // TODO: ADD CHARACTER, LEVEL, DIFFICULTY SETTING
 // TODO: REDESIGN LEVEL LAYOUT
 // TODO: REDESIGN CHARACTERS
-// TODO: ADD GEM SPAWNS
-// TODO: ADD SCORE SYSTEM
-// TODO: ADD LIFE BAR
+// TODO: GAME OVER SCREEN
 
 var tileWidth = 101;
 var tileHeight = (171/2);
@@ -51,6 +49,7 @@ Enemy.prototype.update = function(dt) {
     if (player.x >= this.x - 25 && player.x <= this.x + 25) {
         if (player.y >= this.y -20 && player.y <= this.y + 20){
             player.reset();
+            lives.decrease();
         };
     }
 }
@@ -65,6 +64,7 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.score = 0;
 }
 
 Player.prototype.update = function(dt){
@@ -107,23 +107,48 @@ Gem.prototype.update = function(){
         this.sprite = gemImages[Math.floor(Math.random() * 3)];
         this.x = xPos[Math.floor(Math.random() * 5)];
         this.y = yPos[Math.floor(Math.random() * 3)]; 
+        player.score += 100;
     };
 }
 
+var Lives = function() {
+  this.sprite = 'images/Heart.png';
+  this.x = xPos[Math.floor(Math.random() * 5)];
+  this.y = yPos[Math.floor(Math.random() * 3)]; 
+  this.lives = 5;
+}
+
+Lives.prototype.update = function(){
+
+}
+
+Lives.prototype.render = function(){
+    var x = 0;
+    for (var i = 0; i < this.lives; i++) {
+        ctx.drawImage(Resources.get(this.sprite), x, 570, 50, 75);
+        x += 50;
+    }
+    //ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 101, 171);
+}
+
+Lives.prototype.decrease = function() {
+  if (this.lives > 0) {
+    this.lives -= 1;
+  }
+
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var gem = new Gem();
+var lives = new Lives();
 var allEnemies = [];
 var numEnemies = 6;
 for (var i = 0; i < numEnemies; i++){
    allEnemies.push(new Enemy)
 }
 var player = new Player();
-
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -137,3 +162,11 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+// HELPER FUNCTIONS
+
+function drawText() {
+    ctx.fillText('score: ' + player.score, 0, 40);
+    //ctx.drawImage('images/Heart.png', 200, 400)
+}
