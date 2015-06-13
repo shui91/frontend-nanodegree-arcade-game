@@ -56,9 +56,7 @@ Enemy.prototype.update = function(dt) {
 }
 
 // Draw the enemy on the screen, required method for game
-// Enemy.prototype.render = function() {
-//     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-// }
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -87,17 +85,12 @@ Player.prototype.update = function(dt){
     if (this.y < 25){
         this.reset();
     }
-    console.log(this.x, this.y);
 }
 
 Player.prototype.reset = function() {
     this.x = 200;
     this.y = 400;
 }
-
-// Player.prototype.render = function(){
-//     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-// }
 
 Player.prototype.handleInput = function(e) {
     this.downKey = e;
@@ -117,9 +110,6 @@ Gem.prototype.update = function(){
     };
 }
 
-// Gem.prototype.render = function(){
-//     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-// }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
