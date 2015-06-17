@@ -2,14 +2,13 @@
 // TODO: ADD CHARACTER, LEVEL, DIFFICULTY SETTING
 // TODO: REDESIGN LEVEL LAYOUT
 // TODO: REDESIGN CHARACTERS
-
-var tileWidth = 101;
-var tileHeight = (171/2);
-var enemyStart = -100;
-var xPos = [-2, 99, 200, 301, 402];
-var yPos = [58, 143.5, 229];
-var gemImages = ['images/gem-orange.png', 'images/gem-blue.png', 'images/gem-blue.png'];
-var gameOver = false;
+var TILE_WIDTH = 101;
+var TILE_HEIGHT = (171/2);
+var ENEMY_START = -100;
+var XPOS = [-2, 99, 200, 301, 402];
+var YPOS = [58, 143.5, 229];
+var GEM_IMAGES = ['images/gem-orange.png', 'images/gem-blue.png', 'images/gem-blue.png'];
+var GAME_OVER = false;
 
 // CREATE GLOBAL GAMEOBJ OBJECT TO MANIPULATE//
 var gameObj = function () {
@@ -23,6 +22,7 @@ gameObj.prototype.render = function() {
 
 // Enemies our player must avoid
 var Enemy = function() {
+    // calls gameObj to be used as reference for "this"
     gameObj.call(this);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -30,10 +30,10 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = enemyStart;
-    this.y = yPos[Math.floor(Math.random() * 3)];
+    this.x = ENEMY_START;
+    this.y = YPOS[Math.floor(Math.random() * 3)];
     this.speed = Math.floor((Math.random() * 200) + 110); 
-}
+};
 
 // All objects created here fall back to gameObj for render property
 Enemy.prototype = Object.create(gameObj.prototype);
@@ -49,12 +49,12 @@ Enemy.prototype.update = function(dt) {
         this.x += this.speed * dt;
     }
     else {
-        this.x = enemyStart;
+        this.x = ENEMY_START;
         //Shifts the bugs a row, to add randomness; also keeps the bugs within the rock rows
-        this.y = this.y + 83.5
+        this.y = this.y + 83.5;
         if (this.y > 229) {
             this.y = 58;
-        };
+        }
         this.x += this.speed * dt;
     }
     // Collision case, Player will reset and lose one life
@@ -62,12 +62,9 @@ Enemy.prototype.update = function(dt) {
         if (player.y >= this.y -25 && player.y <= this.y + 25){
             player.reset();
             lives.decrease();
-        };
+        }
     }
-}
-
-// Draw the enemy on the screen, required method for game
-
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -78,7 +75,7 @@ var Player = function() {
     this.x = 200;
     this.y = 400;
     this.score = 0;
-}
+};
 
 // Falls onto gameObj for render property
 Player.prototype = Object.create(gameObj.prototype);
@@ -86,16 +83,16 @@ Player.prototype.constructor = Player;
 
 Player.prototype.update = function(dt){
     if (this.downKey === 'left' && this.x > 0){
-        this.x -= tileWidth;
+        this.x -= TILE_WIDTH;
     }
     else if(this.downKey === 'right' && this.x != 402){
-        this.x += tileWidth;
+        this.x += TILE_WIDTH;
     }
     else if(this.downKey === 'up'){
-        this.y -= tileHeight;
+        this.y -= TILE_HEIGHT;
     }
     else if(this.downKey === 'down' && this.y != 400){
-        this.y += tileHeight;
+        this.y += TILE_HEIGHT;
     }
     this.downKey = null;
     // If player hits water, life will decrease and will respawn
@@ -103,27 +100,27 @@ Player.prototype.update = function(dt){
         this.reset();
         lives.decrease();
     }
-}
+};
 
 // reset player sprite when hit by bug or out of bounds
 Player.prototype.reset = function() {
     this.x = 200;
     this.y = 400;
-}
+};
 
 Player.prototype.handleInput = function(e) {
     this.downKey = e;
-}
+};
 
 // Creates Gems
 var Gem = function() {
     gameObj.call(this);
     // chooses random gem image to use
-    this.sprite = gemImages[Math.floor(Math.random() * 3)];
+    this.sprite = GEM_IMAGES[Math.floor(Math.random() * 3)];
     // generate random position for gem to spawn
-    this.x = xPos[Math.floor(Math.random() * 5)];
-    this.y = yPos[Math.floor(Math.random() * 3)];
-}
+    this.x = XPOS[Math.floor(Math.random() * 5)];
+    this.y = YPOS[Math.floor(Math.random() * 3)];
+};
 
 // fall back on gameObj for render function and make the constructor Gem
 Gem.prototype = Object.create(gameObj.prototype);
@@ -132,18 +129,18 @@ Gem.prototype.constructor = Gem;
 Gem.prototype.update = function(){
     // Gem collision mechanic and respawn
     if (player.x == this.x && player.y == this.y){
-        this.sprite = gemImages[Math.floor(Math.random() * 3)];
-        this.x = xPos[Math.floor(Math.random() * 5)];
-        this.y = yPos[Math.floor(Math.random() * 3)]; 
+        this.sprite = GEM_IMAGES[Math.floor(Math.random() * 3)];
+        this.x = XPOS[Math.floor(Math.random() * 5)];
+        this.y = YPOS[Math.floor(Math.random() * 3)]; 
         player.score += 100;
-    };
-}
+    }
+};
 
 var Lives = function() {
-    gameObj.call(this);
+gameObj.call(this);
     this.sprite = 'images/Heart.png';
     this.lives = 5;
-}
+};
 
 Lives.prototype = Object.create(gameObj.prototype);
 Lives.prototype.constructor = Lives;
@@ -155,16 +152,16 @@ Lives.prototype.render = function(){
         ctx.drawImage(Resources.get(this.sprite), x, -15, 50, 75);
         x -= 50;
     }
-}
+};
 
 // Life point system
 Lives.prototype.decrease = function() {
   if (this.lives > 1) {
     this.lives -= 1;
-  } else if (this.lives === 0) {
-    gameOver = true;
+  } else {
+    GAME_OVER = true;
   }
-}
+};
 
 // HELPER FUNCTIONS
 // Draws Score Text onto screen
@@ -175,7 +172,7 @@ function drawText() {
 
 // Reset Button changes states back to init state
 function reset() {
-    gameOver = false;
+    GAME_OVER = false;
     player.score = 0;
     player.reset();
     lives.lives = 5;
@@ -192,7 +189,7 @@ var lives = new Lives();
 var allEnemies = [];
 var numEnemies = 6;
 for (var i = 0; i < numEnemies; i++){
-   allEnemies.push(new Enemy)
+   allEnemies.push(new Enemy());
 }
 var player = new Player();
 
@@ -208,5 +205,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-                  

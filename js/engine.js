@@ -30,8 +30,8 @@ var Engine = (function(global) {
     canvas.setAttribute("class", "canvas");
     doc.body.appendChild(canvas);
 
-    ctx.font = "35px verdana"
-    ctx.fillStyle = "Black"
+    ctx.font = "35px verdana";
+    ctx.fillStyle = "Black";
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -61,7 +61,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -143,7 +143,7 @@ var Engine = (function(global) {
             }
         }
 
-        if (gameOver) {
+        if (GAME_OVER) {
             ctx.rect(0,0,505,706);
             ctx.fillStyle="black";
             ctx.fill();
@@ -165,7 +165,7 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        if (!gameOver){
+        if (!GAME_OVER){
             allEnemies.forEach(function(enemy) {
                 enemy.render();
             });

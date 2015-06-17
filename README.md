@@ -1,6 +1,14 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+How to Start Game
+-----------------
+Download this repository, from https://github.com/shui91/frontend-nanodegree-arcade-game, either by git clone or the zip download. Then open up 
+the index.html in your browser.
 
-for self-checking their submission.
+How to Play
+-----------
+Using the arrow keys, move onto the stone road to collect gems. Collect gems to earn a high score.
+Avoid the water and bugs or you'll lose a life!
+
+Use the restart button to start the game over again.
