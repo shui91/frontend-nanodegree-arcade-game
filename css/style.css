@@ -1,4 +1,29 @@
 body {
     text-align: center;
+    width: 1000px;
+    margin: auto;
 }
 
+#reset {
+	height: 40px;
+	width: 200px;
+	font-weight: bold;
+	color: white;
+	background-color: green;
+	border-radius: 3px;
+	border: 1px solid #333333;
+	cursor: pointer;
+}
+
+#instructions {
+	height: 325px;
+	width: 405px;
+	border-radius: 3px;
+	border: 1px solid green;
+	float: left;
+}
+
+.canvas {
+	border: 1px solid black;
+	float: right;
+}

@@ -10,13 +10,20 @@ var enemyStart = -100;
 var xPos = [-2, 99, 200, 301, 402];
 var yPos = [58, 143.5, 229];
 var gemImages = ['images/gem-orange.png', 'images/gem-blue.png', 'images/gem-blue.png'];
+var gameOver = false;
 
-Object.prototype.render = function() {
+// CREATE GLOBAL GAMEOBJ OBJECT TO MANIPULATE//
+var gameObj = function () {
+    this.sprite = '';
+};
+
+gameObj.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Enemies our player must avoid
 var Enemy = function() {
+    gameObj.call(this);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -27,6 +34,10 @@ var Enemy = function() {
     this.y = yPos[Math.floor(Math.random() * 3)];
     this.speed = Math.floor((Math.random() * 200) + 110); 
 }
+
+// All objects created here fall back to gameObj for render property
+Enemy.prototype = Object.create(gameObj.prototype);
+Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -39,15 +50,16 @@ Enemy.prototype.update = function(dt) {
     }
     else {
         this.x = enemyStart;
+        //Shifts the bugs a row, to add randomness; also keeps the bugs within the rock rows
         this.y = this.y + 83.5
         if (this.y > 229) {
             this.y = 58;
         };
         this.x += this.speed * dt;
     }
-
+    // Collision case, Player will reset and lose one life
     if (player.x >= this.x - 25 && player.x <= this.x + 25) {
-        if (player.y >= this.y -20 && player.y <= this.y + 20){
+        if (player.y >= this.y -25 && player.y <= this.y + 25){
             player.reset();
             lives.decrease();
         };
@@ -61,11 +73,16 @@ Enemy.prototype.update = function(dt) {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
+    gameObj.call(this);
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
     this.score = 0;
 }
+
+// Falls onto gameObj for render property
+Player.prototype = Object.create(gameObj.prototype);
+Player.prototype.constructor = Player;
 
 Player.prototype.update = function(dt){
     if (this.downKey === 'left' && this.x > 0){
@@ -84,9 +101,11 @@ Player.prototype.update = function(dt){
 
     if (this.y < 25){
         this.reset();
+        lives.decrease();
     }
 }
 
+// reset player sprite when hit by bug or out of bounds
 Player.prototype.reset = function() {
     this.x = 200;
     this.y = 400;
@@ -97,12 +116,20 @@ Player.prototype.handleInput = function(e) {
 }
 
 var Gem = function() {
+    gameObj.call(this);
+    // chooses random gem image to use
     this.sprite = gemImages[Math.floor(Math.random() * 3)];
+    // generate random position for gem to spawn
     this.x = xPos[Math.floor(Math.random() * 5)];
     this.y = yPos[Math.floor(Math.random() * 3)];
 }
 
+// fall back on gameObj for render function and make the constructor Gem
+Gem.prototype = Object.create(gameObj.prototype);
+Gem.prototype.constructor = Gem;
+
 Gem.prototype.update = function(){
+    // Gem collision mechanic
     if (player.x == this.x && player.y == this.y){
         this.sprite = gemImages[Math.floor(Math.random() * 3)];
         this.x = xPos[Math.floor(Math.random() * 5)];
@@ -112,28 +139,36 @@ Gem.prototype.update = function(){
 }
 
 var Lives = function() {
-  this.sprite = 'images/Heart.png';
-  this.x = xPos[Math.floor(Math.random() * 5)];
-  this.y = yPos[Math.floor(Math.random() * 3)]; 
-  this.lives = 5;
+    gameObj.call(this);
+    this.sprite = 'images/Heart.png';
+    this.x = xPos[Math.floor(Math.random() * 5)];
+    this.y = yPos[Math.floor(Math.random() * 3)]; 
+    this.lives = 5;
 }
+
+Lives.prototype = Object.create(gameObj.prototype);
+Lives.prototype.constructor = Lives;
 
 Lives.prototype.update = function(){
 
 }
 
+// Render life points
 Lives.prototype.render = function(){
-    var x = 0;
+    var x = 455;
     for (var i = 0; i < this.lives; i++) {
-        ctx.drawImage(Resources.get(this.sprite), x, 570, 50, 75);
-        x += 50;
+        ctx.drawImage(Resources.get(this.sprite), x, -15, 50, 75);
+        x -= 50;
     }
     //ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 101, 171);
 }
 
+// Life point system
 Lives.prototype.decrease = function() {
-  if (this.lives > 0) {
+  if (this.lives >= 1) {
     this.lives -= 1;
+  } else if (this.lives === 0) {
+    gameOver = true;
   }
 
 }
@@ -141,6 +176,7 @@ Lives.prototype.decrease = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
 var gem = new Gem();
 var lives = new Lives();
 var allEnemies = [];
@@ -165,8 +201,19 @@ document.addEventListener('keyup', function(e) {
 
 
 // HELPER FUNCTIONS
-
+// Draws Score Text onto screen
 function drawText() {
     ctx.fillText('score: ' + player.score, 0, 40);
-    //ctx.drawImage('images/Heart.png', 200, 400)
+    ctx.fillStyle = "black";
 }
+
+// Reset Button
+function reset() {
+    gameOver = false;
+    player.score = 0;
+    player.reset();
+    lives.lives = 5;
+    ctx.clearRect(0, 0, 505, 716);
+    drawText();
+}
+                  

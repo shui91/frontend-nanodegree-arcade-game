@@ -26,7 +26,8 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 505;
-    canvas.height = 706;
+    canvas.height = 606;
+    canvas.setAttribute("class", "canvas");
     doc.body.appendChild(canvas);
 
     ctx.font = "35px verdana"
@@ -142,9 +143,18 @@ var Engine = (function(global) {
             }
         }
 
+        if (gameOver) {
+            ctx.rect(0,0,505,706);
+            ctx.fillStyle="black";
+            ctx.fill();
+            ctx.font = '30px Arial';
+            ctx.fillStyle = 'Grey';
+            ctx.fillText("Game Over!", 100,(canvas.height/2 - 100));
+            ctx.fillText("Your score was: " + player.score , 100,(canvas.height/2));
+        }
+
 
         renderEntities();
-        drawText();
     }
 
     /* This function is called by the render function and is called on each game
@@ -155,12 +165,15 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
-        gem.render();
-        lives.render();
-        player.render();
+        if (!gameOver){
+            allEnemies.forEach(function(enemy) {
+                enemy.render();
+            });
+            gem.render();
+            lives.render();
+            player.render();
+            drawText();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -168,7 +181,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
     }
 
     /* Go ahead and load all of the images we know we're going to need to
