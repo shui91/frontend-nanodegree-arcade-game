@@ -2,7 +2,6 @@
 // TODO: ADD CHARACTER, LEVEL, DIFFICULTY SETTING
 // TODO: REDESIGN LEVEL LAYOUT
 // TODO: REDESIGN CHARACTERS
-// TODO: GAME OVER SCREEN
 
 var tileWidth = 101;
 var tileHeight = (171/2);
@@ -17,6 +16,7 @@ var gameObj = function () {
     this.sprite = '';
 };
 
+// Global render function for all game objects
 gameObj.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -98,7 +98,7 @@ Player.prototype.update = function(dt){
         this.y += tileHeight;
     }
     this.downKey = null;
-
+    // If player hits water, life will decrease and will respawn
     if (this.y < 25){
         this.reset();
         lives.decrease();
@@ -115,6 +115,7 @@ Player.prototype.handleInput = function(e) {
     this.downKey = e;
 }
 
+// Creates Gems
 var Gem = function() {
     gameObj.call(this);
     // chooses random gem image to use
@@ -129,7 +130,7 @@ Gem.prototype = Object.create(gameObj.prototype);
 Gem.prototype.constructor = Gem;
 
 Gem.prototype.update = function(){
-    // Gem collision mechanic
+    // Gem collision mechanic and respawn
     if (player.x == this.x && player.y == this.y){
         this.sprite = gemImages[Math.floor(Math.random() * 3)];
         this.x = xPos[Math.floor(Math.random() * 5)];
@@ -141,17 +142,11 @@ Gem.prototype.update = function(){
 var Lives = function() {
     gameObj.call(this);
     this.sprite = 'images/Heart.png';
-    this.x = xPos[Math.floor(Math.random() * 5)];
-    this.y = yPos[Math.floor(Math.random() * 3)]; 
     this.lives = 5;
 }
 
 Lives.prototype = Object.create(gameObj.prototype);
 Lives.prototype.constructor = Lives;
-
-Lives.prototype.update = function(){
-
-}
 
 // Render life points
 Lives.prototype.render = function(){
@@ -160,17 +155,32 @@ Lives.prototype.render = function(){
         ctx.drawImage(Resources.get(this.sprite), x, -15, 50, 75);
         x -= 50;
     }
-    //ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 101, 171);
 }
 
 // Life point system
 Lives.prototype.decrease = function() {
-  if (this.lives >= 1) {
+  if (this.lives > 1) {
     this.lives -= 1;
   } else if (this.lives === 0) {
     gameOver = true;
   }
+}
 
+// HELPER FUNCTIONS
+// Draws Score Text onto screen
+function drawText() {
+    ctx.fillText('score: ' + player.score, 0, 40);
+    ctx.fillStyle = "black";
+}
+
+// Reset Button changes states back to init state
+function reset() {
+    gameOver = false;
+    player.score = 0;
+    player.reset();
+    lives.lives = 5;
+    ctx.clearRect(0, 0, 505, 716);
+    drawText();
 }
 
 // Now instantiate your objects.
@@ -199,21 +209,4 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-
-// HELPER FUNCTIONS
-// Draws Score Text onto screen
-function drawText() {
-    ctx.fillText('score: ' + player.score, 0, 40);
-    ctx.fillStyle = "black";
-}
-
-// Reset Button
-function reset() {
-    gameOver = false;
-    player.score = 0;
-    player.reset();
-    lives.lives = 5;
-    ctx.clearRect(0, 0, 505, 716);
-    drawText();
-}
                   
