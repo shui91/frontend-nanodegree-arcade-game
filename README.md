@@ -9,6 +9,6 @@ the index.html in your browser.
 How to Play
 -----------
 Using the arrow keys, move onto the stone road to collect gems. Collect gems to earn a high score.
-Avoid the water and bugs or you'll lose a life!
+You have five lives, avoid the water and bugs or you'll lose a life, after that it's game over! 
 
 Use the restart button to start the game over again.
