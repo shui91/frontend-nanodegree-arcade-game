@@ -16,11 +16,22 @@ body {
 }
 
 #instructions {
-	height: 325px;
+	height: 525px;
 	width: 405px;
 	border-radius: 3px;
 	border: 1px solid green;
 	float: left;
+}
+
+#charSelect {
+	height: 606px;
+	width: 507px;
+	float: right;
+}
+
+.avatarImg {
+	height: 105px;
+	width: 63px;
 }
 
 .canvas {
