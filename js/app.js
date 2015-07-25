@@ -10,6 +10,19 @@ var YPOS = [58, 143.5, 229];
 var GEM_IMAGES = ['images/gem-orange.png', 'images/gem-blue.png', 'images/gem-blue.png'];
 var GAME_OVER = false;
 
+
+//FINITE STATE MACHINE
+// var fsm = StateMachine.create({
+//     initial: 'menu',
+//     events: [
+//     {name: 'play', from: 'menu', to: 'game'},
+//     {name: 'quit', from: 'game', to: 'menu'},
+//     ],
+//     callbacks: {
+//         onentermenu: function() {$('#menu').show();},
+//         onentergame: function() {$('#game').show();}
+//     }
+// })
 // CREATE GLOBAL GAMEOBJ OBJECT TO MANIPULATE//
 var gameObj = function () {
     this.sprite = '';

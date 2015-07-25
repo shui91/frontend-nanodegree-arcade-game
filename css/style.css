@@ -1,7 +1,7 @@
 body {
     text-align: center;
-    width: 1000px;
     margin: auto;
+    width: 505px;
 }
 
 #reset {
@@ -16,17 +16,18 @@ body {
 }
 
 #instructions {
-	height: 525px;
-	width: 405px;
+	height: 606px;
+	width: 505px;
 	border-radius: 3px;
 	border: 1px solid green;
-	float: left;
+	position: absolute;
+	/*float: left;*/
 }
 
 #charSelect {
 	height: 606px;
 	width: 507px;
-	float: right;
+	/*float: right;*/
 }
 
 .avatarImg {
